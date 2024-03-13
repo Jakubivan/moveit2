@@ -48,7 +48,7 @@ static const Eigen::MatrixXd NOISE = Eigen::MatrixXd::Constant(VARIABLES, TIMEST
 
 TEST(NoiseGeneratorTest, testStartEndUnchanged)
 {
-  auto noise_gen = stomp_moveit::noise::getNormalDistributionGenerator(TIMESTEPS, STDDEV);
+  auto noise_gen = stomp_moveit::noise::get_normal_distribution_generator(TIMESTEPS, STDDEV);
 
   auto noise = NOISE;
   auto noisy_values = NOISY_VALUES;

@@ -82,9 +82,9 @@ public:
     }
 
     // STOMP reads the seed trajectory from trajectory constraints so we need to convert the waypoints first
-    const size_t seed_waypoint_count = res.trajectory->getWayPointCount();
+    const size_t seed_waypoint_count = res.trajectory_->getWayPointCount();
     const std::vector<std::string> joint_names =
-        res.trajectory->getFirstWayPoint().getJointModelGroup(req.group_name)->getActiveJointModelNames();
+        res.trajectory_->getFirstWayPoint().getJointModelGroup(req.group_name)->getActiveJointModelNames();
     const size_t joint_count = joint_names.size();
     planning_interface::MotionPlanRequest seed_req = req;
     seed_req.trajectory_constraints.constraints.clear();
@@ -96,7 +96,7 @@ public:
       {
         seed_req.trajectory_constraints.constraints[i].joint_constraints[j].joint_name = joint_names[j];
         seed_req.trajectory_constraints.constraints[i].joint_constraints[j].position =
-            res.trajectory->getWayPoint(i).getVariablePosition(joint_names[j]);
+            res.trajectory_->getWayPoint(i).getVariablePosition(joint_names[j]);
       }
     }
 
@@ -113,10 +113,10 @@ public:
     bool success = planning_context->solve(stomp_res);
     if (success)
     {
-      res.trajectory = stomp_res.trajectory;
-      res.planning_time += stomp_res.planning_time;
+      res.trajectory_ = stomp_res.trajectory_;
+      res.planning_time_ += stomp_res.planning_time_;
     }
-    res.error_code = stomp_res.error_code;
+    res.error_code_ = stomp_res.error_code_;
     return success;
   }
 

@@ -210,7 +210,7 @@ bool StompPlanningContext::solve(planning_interface::MotionPlanResponse& res)
   auto time_start = std::chrono::steady_clock::now();
 
   // Default to happy path
-  res.error_code.val = moveit_msgs::msg::MoveItErrorCodes::SUCCESS;
+  res.error_code_.val = moveit_msgs::msg::MoveItErrorCodes::SUCCESS;
 
   // Extract start and goal states
   const auto& req = getMotionPlanRequest();
@@ -220,7 +220,7 @@ bool StompPlanningContext::solve(planning_interface::MotionPlanResponse& res)
   auto goal_sampler = sampler_manager.selectSampler(getPlanningScene(), getGroupName(), req.goal_constraints.at(0));
   if (!goal_sampler || !goal_sampler->sample(goal_state))
   {
-    res.error_code.val = moveit_msgs::msg::MoveItErrorCodes::INVALID_GOAL_CONSTRAINTS;
+    res.error_code_.val = moveit_msgs::msg::MoveItErrorCodes::INVALID_GOAL_CONSTRAINTS;
     return false;  // Can't plan without valid goal state
   }
 
@@ -248,12 +248,12 @@ bool StompPlanningContext::solve(planning_interface::MotionPlanResponse& res)
   });
 
   // Solve
-  if (!solveWithStomp(stomp_, start_state, goal_state, group, input_trajectory, res.trajectory))
+  if (!solveWithStomp(stomp_, start_state, goal_state, group, input_trajectory, res.trajectory_))
   {
     // We timed out if the timeout task has completed so that the timeout future is valid and ready
     bool timed_out =
         timeout_future.valid() && timeout_future.wait_for(std::chrono::nanoseconds(1)) == std::future_status::ready;
-    res.error_code.val =
+    res.error_code_.val =
         timed_out ? moveit_msgs::msg::MoveItErrorCodes::TIMED_OUT : moveit_msgs::msg::MoveItErrorCodes::PLANNING_FAILED;
   }
   stomp_.reset();
@@ -265,9 +265,9 @@ bool StompPlanningContext::solve(planning_interface::MotionPlanResponse& res)
 
   // Stop time
   std::chrono::duration<double> elapsed_seconds = std::chrono::steady_clock::now() - time_start;
-  res.planning_time = elapsed_seconds.count();
+  res.planning_time_ = elapsed_seconds.count();
 
-  return res.error_code.val == moveit_msgs::msg::MoveItErrorCodes::SUCCESS;
+  return res.error_code_.val == moveit_msgs::msg::MoveItErrorCodes::SUCCESS;
 }
 
 bool StompPlanningContext::solve(planning_interface::MotionPlanDetailedResponse& /*res*/)

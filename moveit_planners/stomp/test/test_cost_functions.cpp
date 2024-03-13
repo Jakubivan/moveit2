@@ -48,7 +48,7 @@ TEST(NoiseGeneratorTest, testGetCostFunctionAllValidStates)
   // GIVEN a cost function with a state validator that only returns valid costs of 0.0
   auto state_validator_fn = [](const Eigen::VectorXd& /* state_positions */) { return 0.0; };
   auto cost_fn =
-      stomp_moveit::costs::getCostFunctionFromStateValidator(state_validator_fn, 0.1 /* interpolation_step_size */);
+      stomp_moveit::costs::get_cost_function_from_state_validator(state_validator_fn, 0.1 /* interpolation_step_size */);
 
   // GIVEN a trajectory with TIMESTEPS states, with waypoints interpolating from 0.0 to 1.0 joint values
   Eigen::MatrixXd values = Eigen::MatrixXd::Zero(VARIABLES, TIMESTEPS);
@@ -80,7 +80,7 @@ TEST(NoiseGeneratorTest, testGetCostFunctionInvalidStates)
     return PENALTY * INVALID_TIMESTEPS.count(timestep_counter++);
   };
   auto cost_fn =
-      stomp_moveit::costs::getCostFunctionFromStateValidator(state_validator_fn, 0.0 /* interpolation disabled */);
+      stomp_moveit::costs::get_cost_function_from_state_validator(state_validator_fn, 0.0 /* interpolation disabled */);
 
   // GIVEN a trajectory with TIMESTEPS states, with waypoints interpolating from 0.0 to 1.0 joint values
   Eigen::MatrixXd values = Eigen::MatrixXd::Zero(VARIABLES, TIMESTEPS);
