@@ -61,3 +61,7 @@ qtcreator-*
 
 _build
 _autosummary
+
+#custom
+.idea/
+cmake-build*
