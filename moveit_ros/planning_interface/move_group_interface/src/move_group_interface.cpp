@@ -371,6 +371,7 @@ public:
     else
     {
       variable = target_value;
+      RCLCPP_DEBUG(rclcpp::get_logger("move_group_interface"), "Setting max_%s to: %.2f", factor_name, variable);
     }
   }
 

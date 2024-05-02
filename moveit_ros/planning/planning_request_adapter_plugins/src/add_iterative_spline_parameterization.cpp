@@ -64,6 +64,9 @@ public:
                     std::vector<std::size_t>& /*added_path_index*/) const override
   {
     bool result = planner(planning_scene, req, res);
+     RCLCPP_INFO(LOGGER, "Max velocity scaling factor: %.2f, max acceleration scaling factor: %.2f",
+                req.max_velocity_scaling_factor, req.max_acceleration_scaling_factor);
+                
     if (result && res.trajectory_)
     {
       RCLCPP_DEBUG(LOGGER, "Running '%s'", getDescription().c_str());

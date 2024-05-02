@@ -895,6 +895,7 @@ bool TimeOptimalTrajectoryGeneration::computeTimeStamps(robot_trajectory::RobotT
     return false;
   }
 
+  RCLCPP_DEBUG(LOGGER, "Max velocity scaling factor: %.2f , max acceleration scaling factor: %.2f", max_velocity_scaling_factor, max_acceleration_scaling_factor);
   // Validate scaling
   double velocity_scaling_factor = 1.0;
   if (max_velocity_scaling_factor > 0.0 && max_velocity_scaling_factor <= 1.0)
@@ -959,6 +960,8 @@ bool TimeOptimalTrajectoryGeneration::computeTimeStamps(robot_trajectory::RobotT
                       << max_velocity[j] << " rad/s. You can define velocity limits in the URDF or joint_limits.yaml.");
     }
 
+    RCLCPP_INFO(LOGGER, "Max velocity for joint %s is %.2f", vars[j].c_str(), max_velocity[j]);
+
     max_acceleration[j] = 1.0;
     if (bounds.acceleration_bounded_)
     {
@@ -978,7 +981,11 @@ bool TimeOptimalTrajectoryGeneration::computeTimeStamps(robot_trajectory::RobotT
                                   << max_acceleration[j]
                                   << " rad/s^2. You can define acceleration limits in the URDF or joint_limits.yaml.");
     }
+
+     RCLCPP_DEBUG(LOGGER, "Max acceleration for joint %s is %.2f", vars[j].c_str(), max_acceleration[j]);
   }
+
+ 
 
   return doTimeParameterizationCalculations(trajectory, max_velocity, max_acceleration);
 }
